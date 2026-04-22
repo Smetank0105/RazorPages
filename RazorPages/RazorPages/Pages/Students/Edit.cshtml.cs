@@ -25,7 +25,7 @@ namespace RazorPages.Pages.Students
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null)
+            /*if (id == null)
             {
                 return NotFound();
             }
@@ -36,12 +36,16 @@ namespace RazorPages.Pages.Students
                 return NotFound();
             }
             Student = student;
-            return Page();
+            return Page();*/
+
+            if (id == null) return NotFound();
+            Student = await _context.Students.FindAsync(id);
+            return Student == null ? NotFound() : Page();
         }
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more information, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        /*public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
@@ -67,6 +71,26 @@ namespace RazorPages.Pages.Students
             }
 
             return RedirectToPage("./Index");
+        }*/
+        public async Task<IActionResult> OnPostAsync(int id)
+        {
+            Student studentToUpdate = await _context.Students.FindAsync(id);
+
+            if (studentToUpdate == null)
+            {
+                return NotFound();
+            }
+
+            if (await TryUpdateModelAsync<Student>(
+                studentToUpdate,
+                "student",
+                s => s.FirstName, s => s.LastName, s => s.EnrollmentDate))
+            {
+                await _context.SaveChangesAsync();
+                return RedirectToPage("./Details", new { id = studentToUpdate.ID });
+            }
+
+            return Page();
         }
 
         private bool StudentExists(int id)
