@@ -31,8 +31,10 @@ namespace RazorPages.Pages.Students
         public string CurrentSort { get; set; }
 
         public PaginatedList<Student> Student { get;set; } = default!;
+        [BindProperty]
+        public int PageSize { get; set; }
 
-        public async Task OnGetAsync(string sortOrder, string currentFilter, string searchString, int? pageIndex)
+        public async Task OnGetAsync(string sortOrder, string currentFilter, string searchString, int? pageIndex, int pageSize = 5)
         {
             CurrentSort = sortOrder;
             NameSort = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
@@ -67,10 +69,11 @@ namespace RazorPages.Pages.Students
                     break;
             }
 
-            int pageSize = Configuration.GetValue("PageSize", 4);
+            //int pageSize = Configuration.GetValue("PageSize", 4);
+            PageSize = pageSize;
 
             Student = await PaginatedList<Student>.CreateAsync(
-                studentsIQ.AsNoTracking(), pageIndex ?? 1, pageSize);
+                studentsIQ.AsNoTracking(), pageIndex ?? 1, PageSize);
         }
     }
 }
