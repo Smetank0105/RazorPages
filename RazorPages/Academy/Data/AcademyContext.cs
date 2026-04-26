@@ -14,7 +14,10 @@ namespace Academy.Data
         }
 
         public DbSet<Direction> Directions { get; set; } = default!;
+        public DbSet<Discipline> Disciplines { get; set; } = default!;
         public DbSet<Group> Groups { get; set; } = default!;
         public DbSet<Student> Students { get; set; } = default!;
+        public DbSet<Teacher> Teachers { get; set; } = default!;
+        public DbSet<TeacherDisciplineRelation> TeachersDisciplinesRelation { get; set; } = default!;
     }
 }
