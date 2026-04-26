@@ -20,10 +20,9 @@ namespace Academy.Pages.Groups
             _context = context;
         }
 
-        public IList<Direction> Directions { get; set; } = default!;
         public IActionResult OnGet()
         {
-            Directions = _context.Directions.ToList();
+            ViewData["direction"] = new SelectList(_context.Directions, "direction_id", "direction_name");
             return Page();
         }
 

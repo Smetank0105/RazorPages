@@ -28,7 +28,7 @@ namespace Academy.Pages.Groups
                 return NotFound();
             }
 
-            var group = await _context.Groups.Include(g => g.Direction).FirstOrDefaultAsync(m => m.group_id == id);
+            var group = await _context.Groups.Include(g => g.Direction).Include(g => g.Students).FirstOrDefaultAsync(m => m.group_id == id);
             if (group == null)
             {
                 return NotFound();

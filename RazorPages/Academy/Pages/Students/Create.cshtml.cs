@@ -21,12 +21,25 @@ namespace Academy.Pages.Students
 
         public IActionResult OnGet()
         {
-        ViewData["group"] = new SelectList(_context.Groups, "group_id", "group_name");
+            ViewData["group"] = new SelectList(_context.Groups, "group_id", "group_name");
             return Page();
         }
 
         [BindProperty]
         public Student Student { get; set; } = default!;
+
+        [BindProperty]
+        public string? Photo64Data
+        {
+            get { if (Student?.photo != null) return Convert.ToBase64String(Student.photo); else return null; }
+            set
+            {
+                if (value != null && value.Contains(','))
+                    Student.photo = Convert.FromBase64String(value.Split(',')[1]);
+                else if (value != null)
+                    Student.photo = Convert.FromBase64String(value);
+            }
+        }
 
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()

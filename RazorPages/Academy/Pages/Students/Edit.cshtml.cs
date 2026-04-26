@@ -23,6 +23,19 @@ namespace Academy.Pages.Students
         [BindProperty]
         public Student Student { get; set; } = default!;
 
+        [BindProperty]
+        public string? Photo64Data
+        {
+            get { if (Student?.photo != null) return Convert.ToBase64String(Student.photo); else return null; }
+            set
+            {
+                if (value != null && value.Contains(','))
+                    Student.photo = Convert.FromBase64String(value.Split(',')[1]);
+                else if (value != null)
+                    Student.photo = Convert.FromBase64String(value);
+            }
+        }
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
@@ -30,13 +43,13 @@ namespace Academy.Pages.Students
                 return NotFound();
             }
 
-            var student =  await _context.Students.FirstOrDefaultAsync(m => m.stud_id == id);
+            var student = await _context.Students.FirstOrDefaultAsync(m => m.stud_id == id);
             if (student == null)
             {
                 return NotFound();
             }
             Student = student;
-           ViewData["group"] = new SelectList(_context.Groups, "group_id", "group_name");
+            ViewData["group"] = new SelectList(_context.Groups, "group_id", "group_name");
             return Page();
         }
 

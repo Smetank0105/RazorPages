@@ -22,11 +22,9 @@ namespace Academy.Pages.Groups
 
         [BindProperty]
         public Group Group { get; set; } = default!;
-        public IList<Direction> Directions { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            Directions = await _context.Directions.ToListAsync();
             if (id == null)
             {
                 return NotFound();
@@ -38,6 +36,7 @@ namespace Academy.Pages.Groups
                 return NotFound();
             }
             Group = group;
+            ViewData["direction"] = new SelectList(_context.Directions, "direction_id", "direction_name");
             return Page();
         }
 

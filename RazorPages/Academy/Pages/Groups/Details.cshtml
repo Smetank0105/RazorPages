@@ -35,6 +35,19 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Group.start_time)
         </dd>
+        <dt class="col-sm-2">
+            Количество студентов:
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Group.Students.Count()
+        </dd>
+        @foreach (Models.Student s in Model.Group.Students)
+        {
+            <dt class="col-sm-2"/>
+            <dd class="col-sm-10">
+                @s.last_name @s.first_name @s.middle_name
+            </dd>
+        }
     </dl>
 </div>
 <div>
