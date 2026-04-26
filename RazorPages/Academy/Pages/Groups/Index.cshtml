@@ -14,6 +14,9 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.Group[0].group_id)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Group[0].group_name)
             </th>
             <th>
@@ -32,13 +35,15 @@
 @foreach (var item in Model.Group) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.group_id)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.group_name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Direction.direction_name)
             </td>
             <td>
-                @* @Html.DisplayFor(modelItem => item.learning_days) *@
                 @(new Week(item.learning_days))
             </td>
             <td>

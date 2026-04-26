@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Academy.Data;
+using Academy.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Academy.Data;
-using Academy.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Academy.Pages.Groups
 {
@@ -19,8 +20,10 @@ namespace Academy.Pages.Groups
             _context = context;
         }
 
+        public IList<Direction> Directions { get; set; } = default!;
         public IActionResult OnGet()
         {
+            Directions = _context.Directions.ToList();
             return Page();
         }
 

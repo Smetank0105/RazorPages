@@ -13,6 +13,7 @@ namespace Academy.Models
         public int direction { get; set; }
         [Column(TypeName = "tinyint")]
         public int learning_days { get; set; }
+        [DataType(DataType.Time)]
         public TimeOnly start_time { get; set; }
 
         //Navigation properties

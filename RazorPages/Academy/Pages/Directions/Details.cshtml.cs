@@ -28,7 +28,7 @@ namespace Academy.Pages.Directions
                 return NotFound();
             }
 
-            var direction = await _context.Directions.FirstOrDefaultAsync(m => m.direction_id == id);
+            var direction = await _context.Directions.Include(d => d.Groups).FirstOrDefaultAsync(m => m.direction_id == id);
             if (direction == null)
             {
                 return NotFound();

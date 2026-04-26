@@ -21,13 +21,13 @@
             @Html.DisplayNameFor(model => model.Group.direction)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Group.direction)
+            @Html.DisplayFor(model => model.Group.Direction.direction_name)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Group.learning_days)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Group.learning_days)
+            @(new Week(Model.Group.learning_days))
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Group.start_time)

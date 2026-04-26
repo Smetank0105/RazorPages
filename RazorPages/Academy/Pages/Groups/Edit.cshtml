@@ -23,7 +23,12 @@
             <div class="form-group">
 <span class="text-danger">*</span>
                 <label asp-for="Group.direction" class="control-label"></label>
-                <input asp-for="Group.direction" class="form-control" aria-required="true"/>
+                <select asp-for="Group.direction" class="form-control" aria-required="true">
+                    @foreach (Models.Direction d in Model.Directions)
+                    {
+                        <option value="@d.direction_id">@d.direction_name</option>
+                    }
+                </select>
                 <span asp-validation-for="Group.direction" class="text-danger"></span>
             </div>
             <div class="form-group">
