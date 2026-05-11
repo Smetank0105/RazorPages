@@ -14,8 +14,20 @@ namespace RazorPages.Data
         {
         }
 
-        public DbSet<RazorPages.Models.Student> Students { get; set; } = default!;
-        public DbSet<RazorPages.Models.Enrollment> Enrollments { get; set; } = default!;
-        public DbSet<RazorPages.Models.Course> Courses { get; set; } = default!;
+        public DbSet<Student> Students { get; set; } = default!;
+        public DbSet<Enrollment> Enrollments { get; set; } = default!;
+        public DbSet<Course> Courses { get; set; } = default!;
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<Instructor> Instructors { get; set; }
+        public DbSet<OfficeAssignment> OfficeAssignments { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Course>().ToTable(nameof(Courses))
+                .HasMany(c => c.Instructors)
+                .WithMany(i => i.Courses);
+            modelBuilder.Entity<Student>().ToTable(nameof(Students));
+            modelBuilder.Entity<Instructor>().ToTable(nameof(Instructors));
+        }
     }
 }
