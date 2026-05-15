@@ -29,7 +29,7 @@ namespace RazorPages.Pages.Instuctors
                 return NotFound();
             }
 
-            var instructor = await _context.Instructors.FirstOrDefaultAsync(m => m.ID == id);
+            Instructor instructor = await _context.Instructors.FirstOrDefaultAsync(m => m.ID == id);
 
             if (instructor == null)
             {
