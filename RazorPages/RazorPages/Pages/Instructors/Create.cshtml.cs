@@ -1,26 +1,34 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using RazorPages.Data;
+using RazorPages.Models;
+using RazorPages.Pages.Instructors;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using RazorPages.Data;
-using RazorPages.Models;
 
 namespace RazorPages.Pages.Instuctors
 {
-    public class CreateModel : PageModel
+    public class CreateModel : InstructorCoursesPageModel
     {
-        private readonly RazorPages.Data.ContosoUniversityContext _context;
+        private readonly ContosoUniversityContext _context;
+        private readonly ILogger<InstructorCoursesPageModel> _logger;
 
-        public CreateModel(RazorPages.Data.ContosoUniversityContext context)
+        public CreateModel(ContosoUniversityContext context, ILogger<InstructorCoursesPageModel> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public IActionResult OnGet()
         {
+            Instructor instructor = new Instructor();
+            instructor.Courses = new List<Course>();
+
+            PopulateAssignedCourseData(_context, instructor);
             return Page();
         }
 
@@ -28,17 +36,63 @@ namespace RazorPages.Pages.Instuctors
         public Instructor Instructor { get; set; } = default!;
 
         // For more information, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        //public async Task<IActionResult> OnPostAsync()
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return Page();
+        //    }
+
+        //    _context.Instructors.Add(Instructor);
+        //    await _context.SaveChangesAsync();
+
+        //    return RedirectToPage("./Index");
+        //}
+
+        public async Task<IActionResult> OnPostAsync(string[] selectedCourses)
         {
-            if (!ModelState.IsValid)
+            Instructor newInstructor = new Instructor();
+
+            if (selectedCourses.Length > 0)
             {
-                return Page();
+                newInstructor.Courses = new List<Course>();
+                _context.Courses.Load();
             }
 
-            _context.Instructors.Add(Instructor);
-            await _context.SaveChangesAsync();
+            foreach (string course in selectedCourses)
+            {
+                Course foundCourse = await _context.Courses.FindAsync(int.Parse(course));
+                if (foundCourse != null)
+                {
+                    newInstructor.Courses.Add(foundCourse);
+                }
+                else
+                {
+                    _logger.LogWarning("Course {course} not found", course);
+                }
+            }
 
-            return RedirectToPage("./Index");
+            try
+            {
+                if (await TryUpdateModelAsync<Instructor>(
+                                newInstructor,
+                                "Instructor",
+                                i => i.FirstName, i => i.LastName,
+                                i => i.HireDate, i => i.OfficeAssignment))
+                {
+                    _context.Instructors.Add(newInstructor);
+                    await _context.SaveChangesAsync();
+                    return RedirectToPage("./Index");
+                }
+                return RedirectToPage("./Index");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
+
+            PopulateAssignedCourseData(_context, newInstructor);
+            return Page();
         }
     }
 }
